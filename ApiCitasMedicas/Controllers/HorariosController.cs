@@ -31,8 +31,8 @@ namespace ApiCitasMedicas.Controllers
         [HttpGet("{dni}")]
         public async Task<ActionResult> GetHorarios(string dni)
         {
-            var horario = await (from hor in _context.Horarios
-                                 join med in _context.Medicos on hor.Medicoid equals med.Id
+            var horario = await (from med in _context.Medicos
+                                 join hor  in _context.Horarios on  med.Id equals hor.Medicoid
                                  where med.Dni == dni
                                  select new
                                  {
@@ -43,7 +43,8 @@ namespace ApiCitasMedicas.Controllers
                                      hor.Finatencion,
                                      hor.Activo,
                                      hor.Fecharegistro,
-                                     Medico = med
+                                     hor.Nota,
+                                     Medico = hor
                                  }).ToListAsync();
             if (horario.Count <= 0)
             {
